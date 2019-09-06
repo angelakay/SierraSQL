@@ -1,0 +1,11 @@
+--Change the tag as needed
+SELECT 
+p.index_tag,
+p.index_entry,
+count(*)
+FROM sierra_view.phrase_entry p
+WHERE p.index_tag = 'i'
+GROUP BY
+  p.index_tag,
+  p.index_entry
+  HAVING count(*) > 1
