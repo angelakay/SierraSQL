@@ -1,0 +1,30 @@
+--order prices, not invoices
+--used to create pivot tables by selector, vendor, fund, etc.
+SELECT
+o.record_num AS "Order Number",
+--l.bib_record_id AS "Bib record",
+o.record_creation_date_gmt AS "Record Created",
+o.order_status_code AS "Status",
+o.order_date_gmt AS "Order Date",
+b.best_title AS "Title",
+s.field_content AS "Selector",
+o.material_type_code AS "Format",
+oc.location_code AS "Location",
+o.vendor_record_code AS "Vendor",
+f.code AS "Fund",
+o.estimated_price AS "Cost",
+oc.copies AS "Copies"
+FROM sierra_view.order_view o
+JOIN sierra_view.order_record_cmf oc
+ON oc.order_record_id = o.id
+JOIN sierra_view.fund_master f
+ON oc.fund_code::int = f.code_num
+JOIN sierra_view.varfield_view s
+ON s.record_id = o.record_id
+JOIN sierra_view.bib_record_order_record_link l
+ON l.order_record_id = o.id
+JOIN sierra_view.bib_record_property b
+ON b.bib_record_id = l.bib_record_id
+WHERE o.record_creation_date_gmt >= '2018-09-01' AND 
+s.varfield_type_code = 's'
+ORDER BY 1, 2
